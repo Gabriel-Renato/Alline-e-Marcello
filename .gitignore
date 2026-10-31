@@ -1,0 +1,7 @@
+*:Zone.Identifier
+*.MOV
+*.mp4
+Alline e Marcello/
+api/data/db.json
+.DS_Store
+*.log

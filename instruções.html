@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Monsieur+La+Doulaise&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="instruções.css">
+
+    <title>Alline e Marcello</title>
+
+</head>
+
+<body>
+
+    <main class="background"></main>
+    <nav class="navbar">
+        <div class="navbar-logo"><img src="img/LOGO AM.png" alt="Logo"></div>
+        <button class="menu-button" id="menuButton" aria-label="Abrir menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+
+
+    <div class="menu-overlay" id="menuOverlay">
+        <nav class="menu-sections">
+            <a href="index.html">Início</a>
+            <a href="confirmação.html">Confirme Presença</a>
+            <a href="Instruções.html">Dicas e instruções</a>
+            <a href="presentes.html">Presentes</a>
+        </nav>
+    </div>
+
+
+    <section class="instrucoes-container">
+
+        <!-- LOCALIZAÇÃO -->
+        <div class="informacao-section">
+
+            <h2>Localização</h2>
+
+            <h3>Villa Trésor</h3>
+
+            <p class="informacao-endereco">
+                Gleba 12/14, Lote 01 – Ponte Alta Norte (Gama), Brasília – DF, CEP 72427-010.
+            </p>
+
+            <a href="https://www.google.com/maps/search/?api=1&query=Villa+Tr%C3%A9sor+Bras%C3%ADlia"
+                target="_blank" rel="noopener noreferrer" class="botao-localizacao">
+                Ver localização
+            </a>
+
+            <p class="informacao-observacao">
+                Para uma chegada tranquila, recomendamos conferir
+                a rota com antecedência.
+            </p>
+
+        </div>
+
+        <div class="instrucoes-divider"></div>
+
+        <!-- VESTIMENTAS -->
+        <div class="informacao-section">
+
+            <h2>Vestimentas</h2>
+
+            <h3>Traje sugerido</h3>
+
+            <p class="informacao-destaque">
+                Elegante <span>•</span> Confortável <span>•</span> Discreto
+            </p>
+
+            <p class="informacao-observacao">
+                Sugerimos um visual social elegante para a ocasião.
+                Pedimos a gentileza de evitar as cores <strong>verde</strong> e <strong>branco</strong>.
+
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <script>
+        const menuButton = document.getElementById('menuButton');
+        const menuOverlay = document.getElementById('menuOverlay');
+
+        menuButton.addEventListener('click', () => {
+            menuOverlay.classList.toggle('active');
+        });
+    </script>
+</body>
+    <footer class="rodape">
+        <p>Acima de tudo, porém, revistam-se do amor, que é o elo perfeito. <br> <strong>Colossenses 3:14</strong></p>
+    </footer>
+
+</html>

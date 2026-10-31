@@ -1,0 +1,162 @@
+:root {
+  --bg: #f3eee6;
+  --ink: #1f1a17;
+  --muted: #6d6258;
+  --line: #ddd2c4;
+  --card: #fffdf9;
+  --accent: #8b5a3c;
+  --ok: #2f6b4f;
+  --no: #8a3b3b;
+  --pending: #8a6a2f;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Manrope, sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, #efe2d2, transparent 40%),
+    linear-gradient(180deg, #f7f1e8, #efe6da);
+  min-height: 100vh;
+}
+
+h1, h2, h3 { font-family: "Cormorant Garamond", serif; font-weight: 600; margin: 0; }
+.eyebrow { letter-spacing: .18em; text-transform: uppercase; font-size: .72rem; color: var(--accent); margin: 0 0 .4rem; }
+.muted { color: var(--muted); }
+.error { color: var(--no); }
+
+.login-view {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+}
+.login-card, .panel, .gift-form, .gift-card, .modal-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+}
+.login-card {
+  width: min(420px, 100%);
+  padding: 2rem;
+  display: grid;
+  gap: .9rem;
+  box-shadow: 0 20px 50px rgba(60,40,20,.08);
+}
+label { display: grid; gap: .35rem; font-size: .9rem; }
+input, textarea, button, select {
+  font: inherit;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  padding: .75rem .9rem;
+  background: #fff;
+}
+button {
+  background: var(--ink);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+button.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+button.small { padding: .45rem .7rem; font-size: .85rem; }
+button.danger { background: var(--no); }
+
+.app-view { width: min(1100px, calc(100% - 2rem)); margin: 0 auto; padding: 1.5rem 0 3rem; }
+.topbar { display: flex; justify-content: space-between; align-items: end; gap: 1rem; margin-bottom: 1.25rem; }
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: .8rem;
+  margin-bottom: 1.2rem;
+}
+.stat {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 1rem;
+}
+.stat strong { display: block; font-size: 1.6rem; font-family: "Cormorant Garamond", serif; }
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-bottom: 1rem;
+}
+.tabs button {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+.tabs button.active { background: var(--ink); color: #fff; }
+
+.panel { padding: 1rem; }
+.table-wrap { overflow: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: .75rem .5rem; border-bottom: 1px solid var(--line); font-size: .92rem; }
+th { color: var(--muted); font-weight: 600; font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; }
+
+.badge {
+  display: inline-block;
+  padding: .2rem .55rem;
+  border-radius: 999px;
+  font-size: .75rem;
+  font-weight: 700;
+}
+.badge.confirmed { background: #e5f3ea; color: var(--ok); }
+.badge.declined { background: #f8e6e6; color: var(--no); }
+.badge.pending { background: #f4ecd8; color: var(--pending); }
+.badge.pix { background: #e8eef8; color: #2f4f8b; }
+.badge.mao { background: #efe8df; color: #6a4a2f; }
+
+.inline-form { display: flex; gap: .6rem; margin-bottom: 1rem; }
+.inline-form input { flex: 1; }
+
+.gift-form { padding: 1.1rem; margin-bottom: 1rem; display: grid; gap: .8rem; }
+.grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; }
+.delivery {
+  border: 1px dashed var(--line);
+  border-radius: 14px;
+  padding: .8rem 1rem;
+}
+.radio { display: flex; align-items: center; gap: .55rem; margin: .35rem 0; }
+
+.gifts-list { display: grid; gap: .8rem; }
+.gift-card {
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: 88px 1fr auto;
+  gap: 1rem;
+  align-items: center;
+}
+.gift-card img {
+  width: 88px; height: 88px; object-fit: cover; border-radius: 12px; background: #eee;
+}
+.gift-actions { display: flex; flex-direction: column; gap: .4rem; }
+
+.modal {
+  position: fixed; inset: 0; background: rgba(20,14,10,.55);
+  display: grid; place-items: center; padding: 1rem; z-index: 50;
+}
+.modal-card {
+  width: min(420px, 100%);
+  padding: 1.4rem;
+  text-align: center;
+  position: relative;
+}
+.modal-card .close {
+  position: absolute; top: .5rem; right: .6rem;
+  background: transparent; color: var(--ink); font-size: 1.4rem; padding: .2rem .5rem;
+}
+#pixQr { margin: 1rem auto; width: 220px; height: 220px; }
+.pix-amount { font-size: 1.4rem; font-family: "Cormorant Garamond", serif; }
+#pixPayload { width: 100%; min-height: 90px; font-size: .75rem; margin: .6rem 0; }
+
+@media (max-width: 720px) {
+  .grid-2 { grid-template-columns: 1fr; }
+  .gift-card { grid-template-columns: 72px 1fr; }
+  .gift-actions { grid-column: 1 / -1; flex-direction: row; flex-wrap: wrap; }
+}

@@ -1,0 +1,582 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.background {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    background-image: url("img/IMG_6077.JPG.jpeg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1;
+    pointer-events: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    padding: clamp(1rem, 2vw, 1.5rem) clamp(1.25rem, 4vw, 4rem);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    z-index: 3000;
+
+    background: transparent;
+}
+
+.navbar-logo {
+    --logo-size: 180px;
+    width: clamp(100px,
+            12vw,
+            var(--logo-size));
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-shrink: 0;
+    transform: translate(0px, 0px);
+}
+
+.navbar-logo img {
+    width: 60px;
+    height: auto;
+    display: block;
+    object-fit: contain;
+}
+
+/* ========================================
+   BOTÃO HAMBURGER
+======================================== */
+
+.menu-button {
+    width: clamp(42px, 4vw, 52px);
+    height: clamp(42px, 4vw, 52px);
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    z-index: 30000;
+}
+
+
+.menu-button span {
+    display: block;
+    width: 40px;
+    height: 2px;
+    background: #fff;
+    transition:
+        transform 0.3s ease,
+        opacity 0.3s ease;
+}
+
+
+/* ========================================
+   MENU OVERLAY
+======================================== */
+
+.menu-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100dvh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(0, 0, 0, 0.35);
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    opacity: 0;
+    visibility: hidden;
+
+    pointer-events: none;
+
+    transition:
+        opacity 0.35s ease,
+        visibility 0.35s ease;
+
+    z-index: 2000;
+}
+
+
+/* ========================================
+   MENU ABERTO
+======================================== */
+
+.menu-overlay.active {
+    opacity: 1;
+    visibility: visible;
+
+    pointer-events: auto;
+}
+
+
+/* ========================================
+   SEÇÕES
+======================================== */
+
+.menu-sections {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    text-align: center;
+}
+
+.menu-sections a {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    line-height: 1.3;
+    color: #fff;
+    text-decoration: none;
+    opacity: 1;
+    transform: none;
+    transition: none;
+}
+
+.menu-sections a:hover {
+    font-family: 'Monsieur La Doulaise', cursive;
+    transition: none;
+    transform: none;
+    opacity: 1;
+}
+
+@media (max-width: 600px) {
+    .menu-sections {
+        gap: 1.2rem;
+    }
+
+    .menu-sections a {
+        font-size: 1.2rem;
+    }
+}
+
+/* ========================================
+   HAMBURGER → X
+======================================== */
+
+.menu-button.active span:nth-child(1) {
+    transform: translateY(5px) rotate(45deg);
+}
+
+.menu-button.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-button.active span:nth-child(3) {
+    transform: translateY(-22px) rotate(-45deg);
+}
+
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 600px) {
+
+    .navbar {
+        padding:
+            1rem 1.25rem;
+    }
+
+.menu-sections a {
+    font-size: clamp(1.9rem, 8vw, 1.9rem);
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ========================================
+   CONFIRMAÇÃO DE PRESENÇA
+======================================== */
+
+
+.confirmacao {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding: 100px 25px 60px;
+    text-align: center;
+    color: #fff;
+    z-index: 1;
+}
+
+.confirmacao-titulo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 20px;
+}
+
+/* Animação dos três pontinhos */
+
+.pontos {
+    display: inline-flex;
+}
+
+.pontos span {
+    animation: animarPontos 1.4s infinite;
+}
+
+.pontos span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.pontos span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes animarPontos {
+    0%, 60%, 100% {
+        opacity: 0.2;
+    }
+
+    30% {
+        opacity: 1;
+    }
+}
+
+/* Texto explicativo */
+
+.confirmacao-texto {
+    max-width: 420px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    font-weight: 400;
+    line-height: 1.6;
+    margin-bottom: 35px;
+}
+
+/* Campo para digitar o nome */
+
+.campo-nome {
+    width: 100%;
+    max-width: 420px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.campo-nome input {
+    width: 100%;
+    padding: 12px 5px;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #fff;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.campo-nome input::placeholder {
+    color: rgba(255, 255, 255, 0.8);
+    opacity: 1;
+}
+
+.campo-nome:focus-within {
+    border-bottom-color: #fff;
+}
+
+/* Celular */
+
+@media (max-width: 600px) {
+    .confirmacao {
+        padding: 0 25px;
+    }
+
+    .confirmacao-titulo {
+        font-size: 2.3rem;
+    }
+
+    .confirmacao-texto {
+        font-size: 1.05rem;
+        max-width: 320px;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.lista-sugestoes {
+    display: none;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    column-gap: 28px;
+    row-gap: 16px;
+    width: 100%;
+    max-width: 520px;
+    max-height: 220px;
+    overflow-y: auto;
+    margin-top: 18px;
+    padding: 8px;
+    text-align: center;
+}
+
+.opcao-convidado {
+    display: inline-block;
+    width: auto;
+    margin: 0 10px;
+    padding: 5px 0;
+    border: none;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.85);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.25s ease, transform 0.25s ease;
+}
+
+.opcao-convidado:hover {
+    color: #fff;
+    transform: translateY(-3px);
+    text-decoration: none;
+}
+
+/* CONFIRMAÇÃO */
+
+.area-resposta {
+    width: 100%;
+    max-width: 420px;
+    margin-top: 25px;
+    color: #fff;
+    text-align: center;
+}
+
+.area-resposta[hidden] {
+    display: none;
+}
+
+.area-resposta h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    margin-bottom: 12px;
+}
+
+.area-resposta p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.botoes-resposta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.botoes-resposta button {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    background: transparent;
+    color: #fff;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.botoes-resposta button:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+
+
+
+
+/* BOTÕES FINAIS */
+
+.botoes-finais {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.botoes-finais .botao-inicio {
+    display: inline-block;
+    margin-top: 0;
+    padding: 10px 18px;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    background: transparent;
+    color: #fff;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    text-decoration: none;
+    text-align: center;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.botoes-finais .botao-inicio:hover {
+    background: #fff;
+    color: #333;
+}
+
+@media (max-width: 400px) {
+    .botoes-finais {
+        gap: 10px;
+    }
+
+    .botoes-finais .botao-inicio {
+        padding: 10px 12px;
+        font-size: 1rem;
+    }
+}
+.rodape {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    min-height: 45px;
+    padding: 15px;
+    background: #000;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.rodape p {
+    margin: 0;
+    color: #fff;
+    font-size: clamp(10px, 1.2vw, 13px);
+    letter-spacing: 0.5px;
+    line-height: 1.5;
+}

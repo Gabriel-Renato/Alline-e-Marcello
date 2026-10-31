@@ -1,0 +1,443 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.background {
+    position: fixed;
+    inset: -5px;
+    width: calc(100% + 10px);
+    height: calc(100vh + 10px);
+    height: calc(100dvh + 10px);
+    background-image: url("img/Back_Ins.jpeg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(3px);
+    z-index: -1;
+    pointer-events: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    padding: clamp(1rem, 2vw, 1.5rem) clamp(1.25rem, 4vw, 4rem);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    z-index: 2000;
+
+    background: transparent;
+}
+
+.navbar-logo {
+    --logo-size: 180px;
+    width: clamp(100px,
+            12vw,
+            var(--logo-size));
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-shrink: 0;
+    transform: translate(0px, 0px);
+}
+
+.navbar-logo img {
+    width: 60px;
+    height: auto;
+    display: block;
+    object-fit: contain;
+}
+
+/* ========================================
+   BOTÃO HAMBURGER
+======================================== */
+
+.menu-button {
+    width: clamp(42px, 4vw, 52px);
+    height: clamp(42px, 4vw, 52px);
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    z-index: 30000;
+}
+
+
+.menu-button span {
+    display: block;
+    width: 40px;
+    height: 2px;
+    background: #fff;
+    transition:
+        transform 0.3s ease,
+        opacity 0.3s ease;
+}
+
+
+/* ========================================
+   MENU OVERLAY
+======================================== */
+
+.menu-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100dvh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(0, 0, 0, 0.35);
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    opacity: 0;
+    visibility: hidden;
+
+    pointer-events: none;
+
+    transition:
+        opacity 0.35s ease,
+        visibility 0.35s ease;
+
+    z-index: 900;
+}
+
+
+/* ========================================
+   MENU ABERTO
+======================================== */
+
+.menu-overlay.active {
+    opacity: 1;
+    visibility: visible;
+
+    pointer-events: auto;
+}
+
+
+/* ========================================
+   SEÇÕES
+======================================== */
+
+.menu-sections {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    text-align: center;
+}
+
+.menu-sections a {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    line-height: 1.3;
+    color: #fff;
+    text-decoration: none;
+    opacity: 1;
+    transform: none;
+    transition: none;
+}
+
+.menu-sections a:hover {
+    font-family: 'Monsieur La Doulaise', cursive;
+    transition: none;
+    transform: none;
+    opacity: 1;
+}
+
+@media (max-width: 600px) {
+    .menu-sections {
+        gap: 1.2rem;
+    }
+
+    .menu-sections a {
+        font-size: 1.2rem;
+    }
+}
+
+/* ========================================
+   HAMBURGER → X
+======================================== */
+
+.menu-button.active span:nth-child(1) {
+    transform: translateY(5px) rotate(45deg);
+}
+
+.menu-button.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-button.active span:nth-child(3) {
+    transform: translateY(-22px) rotate(-45deg);
+}
+
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 600px) {
+
+    .navbar {
+        padding:
+            1rem 1.25rem;
+    }
+
+.menu-sections a {
+    font-size: clamp(1.9rem, 8vw, 1.9rem);
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ========================================
+   INFORMAÇÕES DO CASAMENTO
+======================================== */
+
+.instrucoes-container {
+    width: 100%;
+    min-height: 100vh;
+    padding: 140px 20px 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+/* SEÇÕES */
+
+.informacao-section {
+    width: 100%;
+    max-width: 560px;
+}
+
+/* TÍTULOS PRINCIPAIS */
+
+.informacao-section h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 3vw, 2.5rem);
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    color: #fff;
+    margin-bottom: 22px;
+}
+
+/* SUBTÍTULOS */
+
+.informacao-section h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.3rem, 1.8vw, 1.55rem);
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 9px;
+}
+
+/* ENDEREÇO */
+
+.informacao-endereco {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.08rem;
+    line-height: 1.6;
+    font-weight: 400;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 20px;
+}
+
+/* BOTÃO */
+
+.botao-localizacao {
+    display: inline-block;
+    padding: 9px 26px;
+    border: 1px solid rgba(255,255,255,0.75);
+    color: #fff;
+    text-decoration: none;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+    transition: 0.3s ease;
+}
+
+.botao-localizacao:hover {
+    background: rgba(255,255,255,0.9);
+    color: #6b5558;
+}
+
+/* OBSERVAÇÕES DISCRETAS */
+
+.informacao-observacao {
+    max-width: 430px;
+    margin: 18px auto 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.98rem;
+    line-height: 1.6;
+    font-weight: 400;
+    font-style: italic;
+    color: rgba(255,255,255,0.72);
+}
+
+/* TRAJE */
+
+.informacao-destaque {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.12rem;
+    line-height: 1.6;
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.informacao-destaque span {
+    padding: 0 5px;
+    color: rgba(255,255,255,0.65);
+}
+
+/* DIVISÓRIA */
+
+.instrucoes-divider {
+    width: 100%;
+    max-width: 330px;
+    height: 1px;
+    background: rgba(255,255,255,0.4);
+    margin: 38px 0;
+}
+
+/* RESPONSIVIDADE */
+
+@media (max-width: 600px) {
+
+    .instrucoes-container {
+        padding: 115px 22px 55px;
+    }
+
+    .informacao-section h2 {
+        margin-bottom: 19px;
+    }
+
+    .informacao-endereco {
+        font-size: 1rem;
+    }
+
+    .informacao-observacao {
+        font-size: 0.95rem;
+    }
+
+    .instrucoes-divider {
+        max-width: 65%;
+        margin: 30px 0;
+    }
+
+}
+.rodape {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    min-height: 45px;
+    padding: 15px;
+    background: #000;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.rodape p {
+    margin: 0;
+    color: #fff;
+    font-size: clamp(10px, 1.2vw, 13px);
+    letter-spacing: 0.5px;
+    line-height: 1.5;
+}

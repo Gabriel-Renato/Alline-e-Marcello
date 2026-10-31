@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Monsieur+La+Doulaise&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="presentes.css">
+    <title>Presentes · Alline e Marcello</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+</head>
+
+<body>
+
+    <main class="background"></main>
+    <nav class="navbar">
+        <div class="navbar-logo"><img src="img/LOGO AM.png" alt="Logo"></div>
+        <button class="menu-button" id="menuButton" aria-label="Abrir menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+
+
+    <div class="menu-overlay" id="menuOverlay">
+        <nav class="menu-sections">
+            <a href="index.html">Início</a>
+            <a href="confirmação.html">Confirme Presença</a>
+            <a href="instruções.html">Dicas e instruções</a>
+            <a href="presentes.html">Presentes</a>
+        </nav>
+    </div>
+
+    <div class="presentes-grid" id="presentesGrid">
+        <p class="presentes-loading">Carregando presentes...</p>
+    </div>
+
+    <div class="presente-modal" id="presenteModal" hidden>
+        <div class="presente-modal-card">
+            <button type="button" class="presente-modal-close" id="fecharModal">&times;</button>
+            <img id="modalImg" alt="">
+            <h3 id="modalNome"></h3>
+            <p class="presente-valor" id="modalValor"></p>
+            <p id="modalDetalhes"></p>
+            <div id="modalModo"></div>
+            <div id="modalPix" class="modal-pix" hidden>
+                <canvas id="modalQr"></canvas>
+                <p>Escaneie o QR Code ou copie o PIX. O valor já vem certinho.</p>
+                <p class="pix-key">Chave: <strong>marcellol177@gmail.com</strong></p>
+                <textarea id="modalPayload" readonly></textarea>
+                <button type="button" id="copiarPix" class="presente-botao">Copiar código PIX</button>
+            </div>
+            <div id="modalMao" class="modal-mao" hidden>
+                <p>Este presente será entregue <strong>na mão do casal</strong> no dia da celebração.</p>
+            </div>
+            <button type="button" id="escolherPresente" class="presente-botao">Quero presentear este</button>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'api/index.php?r=';
+        const menuButton = document.getElementById('menuButton');
+        const menuOverlay = document.getElementById('menuOverlay');
+        const grid = document.getElementById('presentesGrid');
+        const modal = document.getElementById('presenteModal');
+        let currentGift = null;
+
+        menuButton.addEventListener('click', () => {
+            menuOverlay.classList.toggle('active');
+        });
+
+        function money(v) {
+            return Number(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        async function loadGifts() {
+            try {
+                const gifts = await fetch(API_BASE + 'gifts').then(r => r.json());
+                if (!Array.isArray(gifts) || !gifts.length) {
+                    grid.innerHTML = '<p class="presentes-loading">Nenhum presente disponível no momento.</p>';
+                    return;
+                }
+                grid.innerHTML = gifts.map(g => `
+                    <div class="presente-card ${g.is_full ? 'esgotado' : ''}">
+                        <img src="${g.image || ''}" alt="${g.name}">
+                        <h3>${g.name}</h3>
+                        <p class="presente-valor">${money(g.price)}</p>
+                        <p class="presente-modo">${g.delivery_mode === 'mao' ? 'Entrega na mão' : 'Via PIX'}</p>
+                        <button type="button" class="presente-botao" data-id="${g.id}" ${g.is_full ? 'disabled' : ''}>
+                            ${g.is_full ? 'Já escolhido' : 'Ver detalhes'}
+                        </button>
+                    </div>
+                `).join('');
+            } catch {
+                grid.innerHTML = '<p class="presentes-loading">Não foi possível carregar os presentes.</p>';
+            }
+        }
+
+        grid.addEventListener('click', async (e) => {
+            const btn = e.target.closest('[data-id]');
+            if (!btn || btn.disabled) return;
+            const gifts = await fetch(API_BASE + 'gifts').then(r => r.json());
+            currentGift = gifts.find(g => String(g.id) === btn.dataset.id);
+            if (!currentGift) return;
+            openModal(currentGift);
+        });
+
+        async function openModal(gift) {
+            document.getElementById('modalImg').src = gift.image || '';
+            document.getElementById('modalNome').textContent = gift.name;
+            document.getElementById('modalValor').textContent = money(gift.price);
+            document.getElementById('modalDetalhes').textContent = gift.details || '';
+            document.getElementById('modalModo').textContent =
+                gift.delivery_mode === 'mao' ? 'Modo: entregar na mão do casal' : 'Modo: PIX com valor fixo';
+
+            const pixBox = document.getElementById('modalPix');
+            const maoBox = document.getElementById('modalMao');
+
+            if (gift.delivery_mode === 'pix') {
+                maoBox.hidden = true;
+                pixBox.hidden = false;
+                const pix = await fetch(API_BASE + 'gifts/' + gift.id + '/pix').then(r => r.json());
+                document.getElementById('modalPayload').value = pix.payload || '';
+                QRCode.toCanvas(document.getElementById('modalQr'), pix.payload, { width: 220, margin: 1 });
+            } else {
+                pixBox.hidden = true;
+                maoBox.hidden = false;
+            }
+
+            modal.hidden = false;
+        }
+
+        document.getElementById('fecharModal').onclick = () => { modal.hidden = true; };
+        modal.addEventListener('click', (e) => { if (e.target === modal) modal.hidden = true; });
+
+        document.getElementById('copiarPix').onclick = async () => {
+            const text = document.getElementById('modalPayload').value;
+            await navigator.clipboard.writeText(text);
+            const btn = document.getElementById('copiarPix');
+            btn.textContent = 'Copiado!';
+            setTimeout(() => { btn.textContent = 'Copiar código PIX'; }, 1500);
+        };
+
+        document.getElementById('escolherPresente').onclick = async () => {
+            if (!currentGift) return;
+            const guest_name = prompt('Seu nome (para o casal saber quem presentou):') || 'Anônimo';
+            try {
+                const res = await fetch(API_BASE + 'gifts/' + currentGift.id + '/claim', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ guest_name })
+                });
+                const data = await res.json();
+                if (!res.ok) {
+                    alert(data.message || 'Não foi possível registrar.');
+                    return;
+                }
+                alert(currentGift.delivery_mode === 'pix'
+                    ? 'Obrigado! Use o QR Code ou o código PIX acima para concluir.'
+                    : 'Obrigado! Leve o presente no dia e entregue na mão do casal.');
+                modal.hidden = true;
+                loadGifts();
+            } catch {
+                alert('Erro de conexão.');
+            }
+        };
+
+        loadGifts();
+    </script>
+</body>
+<footer class="rodape">
+    <p>Acima de tudo, porém, revistam-se do amor, que é o elo perfeito. <br> <strong>Colossenses 3:14</strong></p>
+</footer>
+
+</html>

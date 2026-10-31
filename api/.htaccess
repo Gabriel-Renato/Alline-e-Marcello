@@ -1,0 +1,8 @@
+RewriteEngine On
+
+# Passa Authorization no InfinityFree/Apache
+RewriteCond %{HTTP:Authorization} .
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ index.php?r=$1 [QSA,L]

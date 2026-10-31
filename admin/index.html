@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin · Alline & Marcello</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+</head>
+<body>
+  <div id="loginView" class="login-view">
+    <form id="loginForm" class="login-card">
+      <p class="eyebrow">Alline & Marcello</p>
+      <h1>Admin</h1>
+      <p class="muted">Acompanhe confirmações e presenteie com PIX ou na mão.</p>
+      <label>E-mail
+        <input type="email" id="email" value="admin@allineemarcello.local" required>
+      </label>
+      <label>Senha
+        <input type="password" id="password" required placeholder="AllineMarcello2026!">
+      </label>
+      <button type="submit">Entrar</button>
+      <p id="loginError" class="error" hidden></p>
+    </form>
+  </div>
+
+  <div id="appView" class="app-view" hidden>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Painel</p>
+        <h1>Alline & Marcello</h1>
+      </div>
+      <button id="logoutBtn" class="ghost">Sair</button>
+    </header>
+
+    <section class="stats" id="stats"></section>
+
+    <nav class="tabs">
+      <button data-tab="confirmations" class="active">Confirmações</button>
+      <button data-tab="guests">Convidados</button>
+      <button data-tab="gifts">Presentes</button>
+      <button data-tab="claims">Escolhas</button>
+    </nav>
+
+    <section class="panel" data-panel="confirmations">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Nome</th><th>Status</th><th>Quando</th></tr>
+          </thead>
+          <tbody id="confirmationsBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel" data-panel="guests" hidden>
+      <form id="guestForm" class="inline-form">
+        <input type="text" id="guestName" placeholder="Novo convidado" required>
+        <button type="submit">Adicionar</button>
+      </form>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Nome</th><th>RSVP</th><th></th></tr>
+          </thead>
+          <tbody id="guestsBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel" data-panel="gifts" hidden>
+      <form id="giftForm" class="gift-form">
+        <h2>Novo presente</h2>
+        <div class="grid-2">
+          <label>Nome<input type="text" id="giftName" required></label>
+          <label>Valor (R$)<input type="number" id="giftPrice" min="1" step="0.01" required></label>
+          <label>Imagem (caminho)<input type="text" id="giftImage" placeholder="img/sofa.png"></label>
+          <label>Qtd. pessoas<input type="number" id="giftMax" min="1" value="1"></label>
+        </div>
+        <label>Detalhes<textarea id="giftDetails" rows="2"></textarea></label>
+        <fieldset class="delivery">
+          <legend>Como o convidado presenteia?</legend>
+          <label class="radio"><input type="radio" name="delivery_mode" value="pix" checked> PIX (QR Code com valor)</label>
+          <label class="radio"><input type="radio" name="delivery_mode" value="mao"> Entregar na mão do casal</label>
+        </fieldset>
+        <p class="muted">Chave PIX fixa: <strong>marcellol177@gmail.com</strong></p>
+        <button type="submit">Salvar presente</button>
+      </form>
+
+      <div id="giftsList" class="gifts-list"></div>
+    </section>
+
+    <section class="panel" data-panel="claims" hidden>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Presente</th><th>Convidado</th><th>Modo</th><th>Valor</th><th>Quando</th></tr>
+          </thead>
+          <tbody id="claimsBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <div id="pixModal" class="modal" hidden>
+    <div class="modal-card">
+      <button class="close" id="closePix">&times;</button>
+      <h3 id="pixTitle">PIX</h3>
+      <canvas id="pixQr"></canvas>
+      <p id="pixAmount" class="pix-amount"></p>
+      <p class="muted">Chave: marcellol177@gmail.com</p>
+      <textarea id="pixPayload" readonly></textarea>
+      <button id="copyPix" type="button">Copiar código PIX</button>
+    </div>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>
