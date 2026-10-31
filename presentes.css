@@ -394,14 +394,24 @@ body {
     text-shadow: 0 1px 8px rgba(0,0,0,.45);
 }
 
-.presente-modo {
-    margin: 0 0 .8rem;
+.presente-modo,
+.presente-vagas {
+    margin: 0 0 .45rem;
     font-size: .85rem;
     opacity: .85;
+    color: #fff;
 }
 
 .presente-card.esgotado {
-    opacity: .55;
+    filter: grayscale(1);
+    opacity: .45;
+    pointer-events: none;
+}
+
+.presente-card.esgotado .presente-botao {
+    background: #666;
+    border-color: #666;
+    color: #ddd;
 }
 
 .presente-modal {
@@ -471,15 +481,16 @@ body {
     cursor: pointer;
 }
 
-.modal-pix img#modalQr {
-    display: block;
-    margin: .8rem auto;
-    width: 220px;
-    height: 220px;
-    max-height: none;
-    object-fit: contain;
-    background: #fff;
-    border-radius: 8px;
+.modal-vagas {
+    margin: 0 0 .6rem;
+    font-size: .9rem;
+    color: #6d6258;
+}
+
+.modal-pix {
+    margin-top: 1rem;
+    padding-top: .8rem;
+    border-top: 1px solid #eee4d8;
 }
 
 .modal-pix textarea {
@@ -494,9 +505,18 @@ body {
     padding: .5rem;
 }
 
-.pix-key {
-    font-size: .9rem;
+.pix-key,
+.pix-ok,
+.pix-amount-label {
+    font-size: .95rem;
     color: #3a322c;
+    margin: .35rem 0;
+}
+
+.pix-amount-label {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1f1a17;
 }
 
 .rodape {

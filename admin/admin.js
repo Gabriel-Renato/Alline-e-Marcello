@@ -154,18 +154,22 @@ async function loadDashboard() {
     : '<tr><td colspan="5">Nenhuma escolha de presente.</td></tr>';
 
   giftsList.innerHTML = data.gifts.map((g) => `
-    <article class="gift-card">
+    <article class="gift-card ${g.is_full ? 'gift-full' : ''}">
       <img src="../${escapeAttr(g.image || '')}" alt="" onerror="this.style.opacity=.2">
       <div>
         <h3>${escapeHtml(g.name)}</h3>
-        <p>${money(g.price)} · ${g.claimed_count}/${g.max_people} escolhido(s)</p>
+        <p>${money(g.price)}</p>
+        <p><strong>Meta:</strong> ${g.claimed_count}/${g.max_people} pessoa(s)
+          ${g.is_full ? '<span class="badge pending">Esgotado</span>' : ''}
+        </p>
         <p>${modeBadge(g.delivery_mode)} ${g.is_active ? '' : '<span class="badge pending">Inativo</span>'}</p>
       </div>
       <div class="gift-actions">
+        <button class="small" data-max="${g.id}" data-current="${g.max_people}">Alterar meta</button>
         <button class="small" data-mode="${g.id}" data-to="${g.delivery_mode === 'pix' ? 'mao' : 'pix'}">
           Mudar para ${g.delivery_mode === 'pix' ? 'mão' : 'PIX'}
         </button>
-        ${g.delivery_mode === 'pix' ? `<button class="small" data-pix="${g.id}">Ver QR PIX</button>` : ''}
+        ${g.delivery_mode === 'pix' ? `<button class="small" data-pix="${g.id}">Ver PIX</button>` : ''}
         <button class="small danger" data-del-gift="${g.id}">Excluir</button>
       </div>
     </article>`).join('');
@@ -215,6 +219,19 @@ document.body.addEventListener('click', async (e) => {
     return;
   }
 
+  const maxBtn = e.target.closest('[data-max]');
+  if (maxBtn) {
+    const next = prompt('Quantas pessoas podem presentear este item?', maxBtn.dataset.current);
+    if (next === null) return;
+    const max_people = Math.max(1, parseInt(next, 10) || 1);
+    await api('admin/gifts/' + maxBtn.dataset.max, {
+      method: 'PUT',
+      body: JSON.stringify({ max_people }),
+    });
+    await loadDashboard();
+    return;
+  }
+
   const modeBtn = e.target.closest('[data-mode]');
   if (modeBtn) {
     await api('admin/gifts/' + modeBtn.dataset.mode, {
@@ -246,8 +263,6 @@ function openPixModal(pix) {
   document.getElementById('pixTitle').textContent = pix.gift_name || 'PIX';
   document.getElementById('pixAmount').textContent = pix.amount_label || '';
   document.getElementById('pixPayload').value = pix.payload || '';
-  const img = document.getElementById('pixQr');
-  img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=8&data=' + encodeURIComponent(pix.payload);
   modal.classList.add('is-open');
   modal.setAttribute('aria-hidden', 'false');
 }
@@ -256,7 +271,6 @@ function closePixModal() {
   const modal = document.getElementById('pixModal');
   modal.classList.remove('is-open');
   modal.setAttribute('aria-hidden', 'true');
-  document.getElementById('pixQr').removeAttribute('src');
   document.getElementById('pixPayload').value = '';
 }
 

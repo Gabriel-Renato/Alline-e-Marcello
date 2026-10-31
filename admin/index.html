@@ -76,15 +76,15 @@
           <label>Nome<input type="text" id="giftName" required></label>
           <label>Valor (R$)<input type="number" id="giftPrice" min="1" step="0.01" required></label>
           <label>Imagem (caminho)<input type="text" id="giftImage" placeholder="img/sofa.png"></label>
-          <label>Qtd. pessoas<input type="number" id="giftMax" min="1" value="1"></label>
+          <label>Quantas pessoas podem presentear?<input type="number" id="giftMax" min="1" value="1" required></label>
         </div>
         <label>Detalhes<textarea id="giftDetails" rows="2"></textarea></label>
         <fieldset class="delivery">
           <legend>Como o convidado presenteia?</legend>
-          <label class="radio"><input type="radio" name="delivery_mode" value="pix" checked> PIX (QR Code com valor)</label>
+          <label class="radio"><input type="radio" name="delivery_mode" value="pix" checked> PIX (copiar código com valor)</label>
           <label class="radio"><input type="radio" name="delivery_mode" value="mao"> Entregar na mão do casal</label>
         </fieldset>
-        <p class="muted">Chave PIX fixa: <strong>marcellol177@gmail.com</strong></p>
+        <p class="muted">Chave PIX: <strong>marcellol177@gmail.com</strong>. Ao atingir a meta de pessoas, o presente fica cinza e indisponível.</p>
         <button type="submit">Salvar presente</button>
       </form>
 
@@ -107,7 +107,6 @@
     <div class="modal-card">
       <button class="close" id="closePix" type="button" aria-label="Fechar">&times;</button>
       <h3 id="pixTitle">PIX</h3>
-      <img id="pixQr" class="pix-qr" alt="QR Code PIX" width="220" height="220">
       <p id="pixAmount" class="pix-amount"></p>
       <p class="muted">Chave: marcellol177@gmail.com</p>
       <textarea id="pixPayload" readonly></textarea>

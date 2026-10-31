@@ -44,19 +44,27 @@
             <img id="modalImg" alt="">
             <h3 id="modalNome"></h3>
             <p class="presente-valor" id="modalValor"></p>
+            <p id="modalVagas" class="modal-vagas"></p>
             <p id="modalDetalhes"></p>
             <div id="modalModo"></div>
-            <div id="modalPix" class="modal-pix" hidden>
-                <img id="modalQr" alt="QR Code PIX" width="220" height="220">
-                <p>Escaneie o QR Code ou copie o PIX. O valor já vem certinho.</p>
-                <p class="pix-key">Chave: <strong>marcellol177@gmail.com</strong></p>
-                <textarea id="modalPayload" readonly></textarea>
-                <button type="button" id="copiarPix" class="presente-botao">Copiar código PIX</button>
-            </div>
+
             <div id="modalMao" class="modal-mao" hidden>
                 <p>Este presente será entregue <strong>na mão do casal</strong> no dia da celebração.</p>
             </div>
-            <button type="button" id="escolherPresente" class="presente-botao">Quero presentear este</button>
+
+            <button type="button" id="escolherPresente" class="presente-botao">Presentear com este</button>
+
+            <div id="modalPix" class="modal-pix" hidden>
+                <p class="pix-ok">Presente reservado! Copie o PIX com o valor certinho:</p>
+                <p class="pix-key">Chave: <strong>marcellol177@gmail.com</strong></p>
+                <p class="pix-amount-label" id="modalPixValor"></p>
+                <textarea id="modalPayload" readonly></textarea>
+                <button type="button" id="copiarPix" class="presente-botao">Copiar código PIX</button>
+            </div>
+
+            <div id="modalObrigado" class="modal-mao" hidden>
+                <p>Obrigado! Seu presente foi registrado.</p>
+            </div>
         </div>
     </div>
 
@@ -101,10 +109,9 @@
                         <p class="presente-valor">${money(g.price)}</p>
                         <p class="presente-modo">${g.delivery_mode === 'mao' ? 'Entrega na mão' : 'Via PIX'}</p>
                         <button type="button" class="presente-botao" data-id="${g.id}" ${g.is_full ? 'disabled' : ''}>
-                            ${g.is_full ? 'Já escolhido' : 'Ver detalhes'}
+                            ${g.is_full ? 'Esgotado' : 'Ver detalhes'}
                         </button>
-                    </div>
-                `).join('');
+                    </div>`).join('');
             } catch {
                 grid.innerHTML = '<p class="presentes-loading">Não foi possível carregar os presentes.</p>';
             }
@@ -115,43 +122,26 @@
             if (!btn || btn.disabled) return;
             const gifts = await fetch(API_BASE + 'gifts').then(r => r.json());
             currentGift = gifts.find(g => String(g.id) === btn.dataset.id);
-            if (!currentGift) return;
+            if (!currentGift || currentGift.is_full) return;
             openModal(currentGift);
         });
 
-        async function openModal(gift) {
+        function openModal(gift) {
             document.getElementById('modalImg').src = gift.image || '';
             document.getElementById('modalNome').textContent = gift.name;
             document.getElementById('modalValor').textContent = money(gift.price);
             document.getElementById('modalDetalhes').textContent = gift.details || '';
+            document.getElementById('modalVagas').textContent = '';
             document.getElementById('modalModo').textContent =
-                gift.delivery_mode === 'mao' ? 'Modo: entregar na mão do casal' : 'Modo: PIX com valor fixo';
+                gift.delivery_mode === 'mao' ? 'Entrega na mão do casal' : 'Presente via PIX';
 
-            const pixBox = document.getElementById('modalPix');
-            const maoBox = document.getElementById('modalMao');
+            document.getElementById('modalPix').hidden = true;
+            document.getElementById('modalObrigado').hidden = true;
             document.getElementById('modalPayload').value = '';
-            document.getElementById('modalQr').removeAttribute('src');
+            document.getElementById('escolherPresente').hidden = false;
+            document.getElementById('modalMao').hidden = gift.delivery_mode !== 'mao';
 
-            if (gift.delivery_mode === 'pix') {
-                maoBox.hidden = true;
-                pixBox.hidden = false;
-                showModal();
-                try {
-                    const pix = await fetch(API_BASE + 'gifts/' + gift.id + '/pix').then(r => r.json());
-                    document.getElementById('modalPayload').value = pix.payload || '';
-                    if (pix.payload) {
-                        document.getElementById('modalQr').src =
-                            'https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=8&data=' +
-                            encodeURIComponent(pix.payload);
-                    }
-                } catch (err) {
-                    document.getElementById('modalDetalhes').textContent = 'Não foi possível carregar o PIX agora.';
-                }
-            } else {
-                pixBox.hidden = true;
-                maoBox.hidden = false;
-                showModal();
-            }
+            showModal();
         }
 
         document.getElementById('fecharModal').onclick = closeModal;
@@ -162,6 +152,7 @@
 
         document.getElementById('copiarPix').onclick = async () => {
             const text = document.getElementById('modalPayload').value;
+            if (!text) return;
             await navigator.clipboard.writeText(text);
             const btn = document.getElementById('copiarPix');
             btn.textContent = 'Copiado!';
@@ -170,7 +161,16 @@
 
         document.getElementById('escolherPresente').onclick = async () => {
             if (!currentGift) return;
-            const guest_name = prompt('Seu nome (para o casal saber quem presentou):') || 'Anônimo';
+            const guest_name = (prompt('Seu nome (para o casal saber quem presentou):') || '').trim();
+            if (!guest_name) {
+                alert('Informe seu nome para continuar.');
+                return;
+            }
+
+            const btn = document.getElementById('escolherPresente');
+            btn.disabled = true;
+            btn.textContent = 'Reservando...';
+
             try {
                 const res = await fetch(API_BASE + 'gifts/' + currentGift.id + '/claim', {
                     method: 'POST',
@@ -180,15 +180,28 @@
                 const data = await res.json();
                 if (!res.ok) {
                     alert(data.message || 'Não foi possível registrar.');
+                    btn.disabled = false;
+                    btn.textContent = 'Presentear com este';
                     return;
                 }
-                alert(currentGift.delivery_mode === 'pix'
-                    ? 'Obrigado! Use o QR Code ou o código PIX acima para concluir.'
-                    : 'Obrigado! Leve o presente no dia e entregue na mão do casal.');
-                closeModal();
+
+                btn.hidden = true;
+                document.getElementById('modalMao').hidden = true;
+
+                if (currentGift.delivery_mode === 'pix') {
+                    const pix = await fetch(API_BASE + 'gifts/' + currentGift.id + '/pix').then(r => r.json());
+                    document.getElementById('modalPixValor').textContent = pix.amount_label || money(currentGift.price);
+                    document.getElementById('modalPayload').value = pix.payload || '';
+                    document.getElementById('modalPix').hidden = false;
+                } else {
+                    document.getElementById('modalObrigado').hidden = false;
+                }
+
                 loadGifts();
             } catch {
                 alert('Erro de conexão.');
+                btn.disabled = false;
+                btn.textContent = 'Presentear com este';
             }
         };
 

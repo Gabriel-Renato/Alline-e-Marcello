@@ -147,6 +147,10 @@ th { color: var(--muted); font-weight: 600; font-size: .78rem; text-transform: u
   width: 88px; height: 88px; object-fit: cover; border-radius: 12px; background: #eee;
 }
 .gift-actions { display: flex; flex-direction: column; gap: .4rem; }
+.gift-card.gift-full {
+  filter: grayscale(.85);
+  opacity: .7;
+}
 
 .modal {
   position: fixed; inset: 0; background: rgba(20,14,10,.55);
