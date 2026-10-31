@@ -1,0 +1,7 @@
+DirectoryIndex index.html index.php
+Options -Indexes
+
+# Garante páginas HTML
+<IfModule mod_mime.c>
+  AddType text/html .html
+</IfModule>

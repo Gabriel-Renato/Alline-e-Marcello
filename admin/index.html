@@ -7,10 +7,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="admin.css">
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 </head>
 <body>
-  <div id="loginView" class="login-view">
+  <div id="loginView" class="login-view is-active">
     <form id="loginForm" class="login-card">
       <p class="eyebrow">Alline & Marcello</p>
       <h1>Admin</h1>
@@ -26,7 +25,7 @@
     </form>
   </div>
 
-  <div id="appView" class="app-view" hidden>
+  <div id="appView" class="app-view">
     <header class="topbar">
       <div>
         <p class="eyebrow">Painel</p>
@@ -104,11 +103,11 @@
     </section>
   </div>
 
-  <div id="pixModal" class="modal" hidden>
+  <div id="pixModal" class="modal" aria-hidden="true">
     <div class="modal-card">
-      <button class="close" id="closePix">&times;</button>
+      <button class="close" id="closePix" type="button" aria-label="Fechar">&times;</button>
       <h3 id="pixTitle">PIX</h3>
-      <canvas id="pixQr"></canvas>
+      <img id="pixQr" class="pix-qr" alt="QR Code PIX" width="220" height="220">
       <p id="pixAmount" class="pix-amount"></p>
       <p class="muted">Chave: marcellol177@gmail.com</p>
       <textarea id="pixPayload" readonly></textarea>

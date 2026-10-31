@@ -67,13 +67,15 @@ async function boot() {
 }
 
 function showLogin() {
-  loginView.hidden = false;
-  appView.hidden = true;
+  loginView.classList.add('is-active');
+  appView.classList.remove('is-active');
+  window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
 }
 
 function showApp() {
-  loginView.hidden = true;
-  appView.hidden = false;
+  loginView.classList.remove('is-active');
+  appView.classList.add('is-active');
+  window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
 }
 
 loginForm.addEventListener('submit', async (e) => {
@@ -225,24 +227,47 @@ document.body.addEventListener('click', async (e) => {
 
   const pixBtn = e.target.closest('[data-pix]');
   if (pixBtn) {
-    const pix = await fetch(API + 'gifts/' + pixBtn.dataset.pix + '/pix').then((r) => r.json());
-    openPixModal(pix);
+    try {
+      const res = await fetch(API + 'gifts/' + pixBtn.dataset.pix + '/pix');
+      const pix = await res.json();
+      if (!res.ok || !pix.payload) {
+        alert(pix.message || 'Não foi possível gerar o PIX.');
+        return;
+      }
+      openPixModal(pix);
+    } catch (err) {
+      alert('Erro ao carregar o PIX.');
+    }
   }
 });
 
 function openPixModal(pix) {
   const modal = document.getElementById('pixModal');
-  document.getElementById('pixTitle').textContent = pix.gift_name;
-  document.getElementById('pixAmount').textContent = pix.amount_label;
-  document.getElementById('pixPayload').value = pix.payload;
-  const canvas = document.getElementById('pixQr');
-  QRCode.toCanvas(canvas, pix.payload, { width: 220, margin: 1 });
-  modal.hidden = false;
+  document.getElementById('pixTitle').textContent = pix.gift_name || 'PIX';
+  document.getElementById('pixAmount').textContent = pix.amount_label || '';
+  document.getElementById('pixPayload').value = pix.payload || '';
+  const img = document.getElementById('pixQr');
+  img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=8&data=' + encodeURIComponent(pix.payload);
+  modal.classList.add('is-open');
+  modal.setAttribute('aria-hidden', 'false');
 }
 
-document.getElementById('closePix').onclick = () => {
-  document.getElementById('pixModal').hidden = true;
-};
+function closePixModal() {
+  const modal = document.getElementById('pixModal');
+  modal.classList.remove('is-open');
+  modal.setAttribute('aria-hidden', 'true');
+  document.getElementById('pixQr').removeAttribute('src');
+  document.getElementById('pixPayload').value = '';
+}
+
+document.getElementById('closePix').onclick = closePixModal;
+document.getElementById('pixModal').addEventListener('click', (e) => {
+  if (e.target.id === 'pixModal') closePixModal();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closePixModal();
+});
+closePixModal();
 
 document.getElementById('copyPix').onclick = async () => {
   const text = document.getElementById('pixPayload').value;

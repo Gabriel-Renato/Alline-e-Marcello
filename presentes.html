@@ -10,7 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Monsieur+La+Doulaise&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="presentes.css">
     <title>Presentes · Alline e Marcello</title>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 </head>
 
 <body>
@@ -28,10 +27,10 @@
 
     <div class="menu-overlay" id="menuOverlay">
         <nav class="menu-sections">
-            <a href="index.html">Início</a>
-            <a href="confirmação.html">Confirme Presença</a>
-            <a href="instruções.html">Dicas e instruções</a>
-            <a href="presentes.html">Presentes</a>
+            <a href="./index.html">Início</a>
+            <a href="./confirmacao.html">Confirme Presença</a>
+            <a href="/instrucoes/index.html">Dicas e instruções</a>
+            <a href="./presentes.html">Presentes</a>
         </nav>
     </div>
 
@@ -39,16 +38,16 @@
         <p class="presentes-loading">Carregando presentes...</p>
     </div>
 
-    <div class="presente-modal" id="presenteModal" hidden>
+    <div class="presente-modal" id="presenteModal" aria-hidden="true">
         <div class="presente-modal-card">
-            <button type="button" class="presente-modal-close" id="fecharModal">&times;</button>
+            <button type="button" class="presente-modal-close" id="fecharModal" aria-label="Fechar">&times;</button>
             <img id="modalImg" alt="">
             <h3 id="modalNome"></h3>
             <p class="presente-valor" id="modalValor"></p>
             <p id="modalDetalhes"></p>
             <div id="modalModo"></div>
             <div id="modalPix" class="modal-pix" hidden>
-                <canvas id="modalQr"></canvas>
+                <img id="modalQr" alt="QR Code PIX" width="220" height="220">
                 <p>Escaneie o QR Code ou copie o PIX. O valor já vem certinho.</p>
                 <p class="pix-key">Chave: <strong>marcellol177@gmail.com</strong></p>
                 <textarea id="modalPayload" readonly></textarea>
@@ -68,6 +67,17 @@
         const grid = document.getElementById('presentesGrid');
         const modal = document.getElementById('presenteModal');
         let currentGift = null;
+
+        function closeModal() {
+            modal.classList.remove('is-open');
+            modal.setAttribute('aria-hidden', 'true');
+            currentGift = null;
+        }
+
+        function showModal() {
+            modal.classList.add('is-open');
+            modal.setAttribute('aria-hidden', 'false');
+        }
 
         menuButton.addEventListener('click', () => {
             menuOverlay.classList.toggle('active');
@@ -119,23 +129,36 @@
 
             const pixBox = document.getElementById('modalPix');
             const maoBox = document.getElementById('modalMao');
+            document.getElementById('modalPayload').value = '';
+            document.getElementById('modalQr').removeAttribute('src');
 
             if (gift.delivery_mode === 'pix') {
                 maoBox.hidden = true;
                 pixBox.hidden = false;
-                const pix = await fetch(API_BASE + 'gifts/' + gift.id + '/pix').then(r => r.json());
-                document.getElementById('modalPayload').value = pix.payload || '';
-                QRCode.toCanvas(document.getElementById('modalQr'), pix.payload, { width: 220, margin: 1 });
+                showModal();
+                try {
+                    const pix = await fetch(API_BASE + 'gifts/' + gift.id + '/pix').then(r => r.json());
+                    document.getElementById('modalPayload').value = pix.payload || '';
+                    if (pix.payload) {
+                        document.getElementById('modalQr').src =
+                            'https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=8&data=' +
+                            encodeURIComponent(pix.payload);
+                    }
+                } catch (err) {
+                    document.getElementById('modalDetalhes').textContent = 'Não foi possível carregar o PIX agora.';
+                }
             } else {
                 pixBox.hidden = true;
                 maoBox.hidden = false;
+                showModal();
             }
-
-            modal.hidden = false;
         }
 
-        document.getElementById('fecharModal').onclick = () => { modal.hidden = true; };
-        modal.addEventListener('click', (e) => { if (e.target === modal) modal.hidden = true; });
+        document.getElementById('fecharModal').onclick = closeModal;
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
 
         document.getElementById('copiarPix').onclick = async () => {
             const text = document.getElementById('modalPayload').value;
@@ -162,13 +185,14 @@
                 alert(currentGift.delivery_mode === 'pix'
                     ? 'Obrigado! Use o QR Code ou o código PIX acima para concluir.'
                     : 'Obrigado! Leve o presente no dia e entregue na mão do casal.');
-                modal.hidden = true;
+                closeModal();
                 loadGifts();
             } catch {
                 alert('Erro de conexão.');
             }
         };
 
+        closeModal();
         loadGifts();
     </script>
 </body>

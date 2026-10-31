@@ -409,9 +409,13 @@ body {
     inset: 0;
     z-index: 40;
     background: rgba(15, 10, 8, .62);
-    display: grid;
+    display: none;
     place-items: center;
     padding: 1rem;
+}
+
+.presente-modal.is-open {
+    display: grid;
 }
 
 .presente-modal-card {
@@ -426,9 +430,23 @@ body {
     text-align: center;
 }
 
-.presente-modal-card img {
+.presente-modal-card h3 {
+    margin: .8rem 0 .35rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: #1f1a17;
+}
+
+.presente-modal-card .presente-valor,
+.presente-modal-card p,
+.presente-modal-card #modalModo {
+    color: #3a322c;
+}
+
+.presente-modal-card > img#modalImg {
     width: 100%;
-    max-height: 220px;
+    max-height: 200px;
     object-fit: cover;
     border-radius: 12px;
 }
@@ -439,13 +457,29 @@ body {
     right: .6rem;
     border: 0;
     background: transparent;
+    color: #1f1a17;
     font-size: 1.6rem;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.presente-modal-card .presente-botao {
+    color: #fff;
+    background: #1f1a17;
+    border-color: #1f1a17;
+    margin-top: .6rem;
     cursor: pointer;
 }
 
-.modal-pix canvas {
+.modal-pix img#modalQr {
     display: block;
     margin: .8rem auto;
+    width: 220px;
+    height: 220px;
+    max-height: none;
+    object-fit: contain;
+    background: #fff;
+    border-radius: 8px;
 }
 
 .modal-pix textarea {
@@ -453,10 +487,16 @@ body {
     min-height: 84px;
     margin: .6rem 0;
     font-size: .72rem;
+    color: #1f1a17;
+    background: #fff;
+    border: 1px solid #ddd2c4;
+    border-radius: 8px;
+    padding: .5rem;
 }
 
 .pix-key {
     font-size: .9rem;
+    color: #3a322c;
 }
 
 .rodape {

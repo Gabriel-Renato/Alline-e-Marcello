@@ -16,8 +16,8 @@
 
     <div class="background">
 
-        <video class="background-video" autoplay muted loop playsinline preload="auto">
-            <source src="img/Alline e Marcelo_VIDEO.mp4" type="video/mp4">
+        <video class="background-video" autoplay muted loop playsinline preload="auto" webkit-playsinline>
+            <source src="img/fundo.mp4" type="video/mp4">
         </video>
     </div>
 
@@ -35,10 +35,10 @@
 
     <div class="menu-overlay" id="menuOverlay">
         <nav class="menu-sections">
-            <a href="index.html">Início</a>
-            <a href="confirmação.html">Confirme Presença</a>
-            <a href="Instruções.html">Dicas e instruções</a>
-            <a href="presentes.html">Presentes</a>
+            <a href="./index.html">Início</a>
+            <a href="./confirmacao.html">Confirme Presença</a>
+            <a href="/instrucoes/index.html">Dicas e instruções</a>
+            <a href="./presentes.html">Presentes</a>
         </nav>
     </div>
     </div>
@@ -93,7 +93,7 @@
                 </div>
             </div>
 
-            <a href="confirmação.html" class="confirm-button">
+            <a href="./confirmacao.html" class="confirm-button">
                 CONFIRMAR PRESENÇA
             </a>
         </div>
@@ -167,24 +167,24 @@
             <div class="horizontal-track">
 
                 <article class="horizontal-panel panel-1">
-                    <div class="panel-content">
+                    <a class="panel-content" href="./confirmacao.html">
                         <h2>Confirmar Presença</h2>
-                        <a href="confirmação.html" class="panel-button">Confirmar</a>
-                    </div>
+                        <span class="panel-button">Confirmar</span>
+                    </a>
                 </article>
 
                 <article class="horizontal-panel panel-2">
-                    <div class="panel-content">
+                    <a class="panel-content" href="/instrucoes/index.html">
                         <h2>Dicas e Instruções</h2>
-                        <a href="instrucoes.html" class="panel-button">dicas e Instruções</a>
-                    </div>
+                        <span class="panel-button">Ver dicas</span>
+                    </a>
                 </article>
 
                 <article class="horizontal-panel panel-3">
-                    <div class="panel-content">
+                    <a class="panel-content" href="./presentes.html">
                         <h2>Escolha um Presente</h2>
-                        <a href="presentes.html" class="panel-button">Ver Presentes</a>
-                    </div>
+                        <span class="panel-button">Ver Presentes</span>
+                    </a>
                 </article>
 
             </div>
@@ -306,6 +306,15 @@
 
         updateHorizontalScroll();
 
+        // Garante autoplay do vídeo de fundo
+        const bgVideo = document.querySelector('.background-video');
+        if (bgVideo) {
+            bgVideo.muted = true;
+            const tryPlay = () => bgVideo.play().catch(() => {});
+            tryPlay();
+            document.addEventListener('click', tryPlay, { once: true });
+            document.addEventListener('touchstart', tryPlay, { once: true });
+        }
 
     </script>
     <footer class="rodape">
