@@ -41,6 +41,23 @@ body {
     object-fit: cover;
     object-position: center center;
     display: block;
+    pointer-events: none;
+    /* Esconde o botão de play nativo do iPhone/Safari */
+    -webkit-appearance: none;
+}
+
+.background-video::-webkit-media-controls {
+    display: none !important;
+    -webkit-appearance: none;
+}
+
+.background-video::-webkit-media-controls-start-playback-button {
+    display: none !important;
+    -webkit-appearance: none;
+}
+
+.background-video::-webkit-media-controls-enclosure {
+    display: none !important;
 }
 
 

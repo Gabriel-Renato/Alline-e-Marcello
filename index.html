@@ -16,7 +16,21 @@
 
     <div class="background">
 
-        <video class="background-video" autoplay muted loop playsinline preload="auto" webkit-playsinline>
+        <video
+            class="background-video"
+            autoplay
+            muted
+            defaultMuted
+            loop
+            playsinline
+            webkit-playsinline="true"
+            x5-playsinline="true"
+            x5-video-player-type="h5"
+            preload="auto"
+            disablePictureInPicture
+            disableRemotePlayback
+            controlsList="nodownload nofullscreen noremoteplayback"
+        >
             <source src="img/fundo.mp4" type="video/mp4">
         </video>
     </div>
@@ -306,14 +320,34 @@
 
         updateHorizontalScroll();
 
-        // Garante autoplay do vídeo de fundo
+        // Autoplay no iPhone/Safari: muted + playsInline obrigatórios
         const bgVideo = document.querySelector('.background-video');
         if (bgVideo) {
+            bgVideo.defaultMuted = true;
             bgVideo.muted = true;
-            const tryPlay = () => bgVideo.play().catch(() => {});
+            bgVideo.playsInline = true;
+            bgVideo.setAttribute('muted', '');
+            bgVideo.setAttribute('playsinline', '');
+            bgVideo.setAttribute('webkit-playsinline', 'true');
+            bgVideo.removeAttribute('controls');
+
+            const tryPlay = () => {
+                const p = bgVideo.play();
+                if (p && typeof p.catch === 'function') {
+                    p.catch(() => {});
+                }
+            };
+
             tryPlay();
-            document.addEventListener('click', tryPlay, { once: true });
-            document.addEventListener('touchstart', tryPlay, { once: true });
+            bgVideo.addEventListener('loadeddata', tryPlay);
+            bgVideo.addEventListener('canplay', tryPlay);
+            document.addEventListener('touchstart', tryPlay, { passive: true });
+            document.addEventListener('touchend', tryPlay, { passive: true });
+            document.addEventListener('click', tryPlay);
+            document.addEventListener('scroll', tryPlay, { passive: true, once: true });
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden) tryPlay();
+            });
         }
 
     </script>
